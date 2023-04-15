@@ -25,7 +25,7 @@ export default function CallToActionWithVideo() {
         src={myVideo}
         autoPlay
         loop
-        // controls
+        controls
       />
       <div className="hero-content">
         <Stack textAlign={"center"}>
@@ -34,7 +34,7 @@ export default function CallToActionWithVideo() {
             fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
             lineHeight={"110%"}
           >
-            <Stack direction={"row"} p={5}>
+            <Stack direction={"row"} p={5} style={{paddingTop:100}}>
               <Text color={"white"}>Meeting scheduling</Text>{" "}
               <Text as={"span"} color={"orange.400"}>
                 made easy
