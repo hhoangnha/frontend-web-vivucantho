@@ -1,6 +1,6 @@
 import React from "react";
 import HeroSection from "../../components/HeroSection";
-import ImageGallery from "../../components/ImageGallery";
+import ImageGallery from "./ImageGallery";
 import TabMenu from "../../components/TabMenu";
 export default function HomePage() {
   return (

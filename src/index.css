@@ -45,27 +45,27 @@ code {
   }
 }
 
-.hover-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0);
-  transition: background 0.5s ease;
+.emoji-404 {
+  position: relative;
+  animation: mymove 2.5s infinite;
 }
-.hover-image:hover{
-  background: rgba(0, 0, 0, .3);
-  display: block;
+
+@keyframes mymove {
+  33% {
+    top: 0px;
+  }
+
+  66% {
+    top: 20px;
+  }
+
+  100% {
+    top: 0px
+  }
+
+
+
 }
-.title-gl {
-  display: none;
-  transition: top .5s ease;
-  font-weight: 700;
-  font-size: 30px;
-  text-align: center;
-  
-}
-.hover-image:hover .title-gl{
-  display: block;
+.ant-modal {
+  z-index: 1000 !important;
 }

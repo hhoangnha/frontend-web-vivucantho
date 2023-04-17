@@ -8,6 +8,7 @@ import {
   Button,
   createIcon,
 } from "@chakra-ui/react";
+import colors from "../styles/colors";
 
 export default function TabMenu() {
   return (
@@ -15,7 +16,7 @@ export default function TabMenu() {
       <Flex justify="center">
         <Wrap spacing="1rem">
           <WrapItem>
-            <Button background={'#AC3B18'} color={'#fff'} rounded={"full"} size={"md"} fontWeight={"bold"} px={10}>
+            <Button background={colors.main} color={'#fff'} rounded={"full"} size={"md"} fontWeight={"bold"} px={10}>
               Trending
             </Button>
           </WrapItem>

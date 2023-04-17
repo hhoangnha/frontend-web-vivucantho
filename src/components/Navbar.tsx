@@ -29,7 +29,7 @@ export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <Box bg={useColorModeValue('white', 'gray.800')} position={'relative'} zIndex={10}>
+    <Box bg={useColorModeValue('white', 'gray.800')} top={0} position={'fixed'} zIndex={10}>
       <Flex
         bg={useColorModeValue('white', 'gray.800')}
         color={useColorModeValue('gray.600', 'white')}
