@@ -189,13 +189,14 @@ export default function ImageModal({ isOpen, onClose, image }) {
                     <Image maxH={700} src={image} alt="Dan Abramov" />
                   </center>
                 </Col>
+                <Col xs={1} md={1} xl={1} />
 
-                <Col xs={{ span: 24 }} md={{ span: 10 }} xl={10}>
+                <Col xs={{ span: 22 }} md={{ span: 8 }} xl={8}>
                   <Center>
                     <Box
                       // maxW={'500px'}
                       w={'full'}
-                      bg={useColorModeValue('white', 'gray.900')}
+                      bg={useColorModeValue('gray.100', 'red.800')}
                       boxShadow={'2xl'}
                       // rounded={'lg'}
                       p={6}
