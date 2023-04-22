@@ -7,6 +7,9 @@ import {
   Space,
   Avatar,
   Image as ImageAntd,
+  Divider,
+  Collapse,
+  theme,
 } from 'antd';
 import {
   Modal,
@@ -42,13 +45,28 @@ import {
   Link,
   Center,
   position,
+  ListItem,
+  ListIcon,
+  List as ListChakra,
 } from '@chakra-ui/react';
-import { HeartOutlined } from '@ant-design/icons';
+import { HeartOutlined, CaretRightOutlined } from '@ant-design/icons';
 import colors from '../../styles/colors';
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { BiChat, BiLike, BiShare } from 'react-icons/bi';
+import ImageGallery from './ImageGallery';
+import ImageGallerySuggestion from './ImageGallerySuggestion';
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+
+const { Panel } = Collapse;
+
 export default function ImageModal({ isOpen, onClose, image }) {
   const [loadings, setLoadings] = useState([]);
+
+  const panelStyle = {
+    marginBottom: 5,
+    background: 'transparent',
+    borderRadius: 'none',
+    border: 'none',
+  };
 
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
@@ -66,17 +84,6 @@ export default function ImageModal({ isOpen, onClose, image }) {
     }, 6000);
   };
 
-  const data = Array.from({
-    length: 1,
-  }).map((_, i) => ({
-    href: 'https://ant.design',
-    title: `ant design part ${i}`,
-    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
-    description:
-      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  }));
   return (
     <>
       {/* <Button onClick={onOpen}>Open Modal</Button> */}
@@ -90,7 +97,7 @@ export default function ImageModal({ isOpen, onClose, image }) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
+          <ModalHeader padding={2}>
             <Row justify={'space-between'}>
               Modal Title
               <Box mr={10}>
@@ -186,7 +193,34 @@ export default function ImageModal({ isOpen, onClose, image }) {
                   style={{ marginBottom: 5 }}
                 >
                   <center>
-                    <Image maxH={700} src={image} alt="Dan Abramov" />
+                    <TransformWrapper
+                      initialScale={1}
+                      // initialPositionX={200}
+                      // initialPositionY={100}
+                    >
+                      {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+                        <React.Fragment>
+                          <div
+                            className="tools"
+                            style={{
+                              position: 'absolute',
+                              zIndex: 1000,
+                              right: 0,
+                              width: 100,
+                              backgroundColor: 'rgba(0,0,0,0.8)',
+                              padding: 10,
+                            }}
+                          >
+                            <button onClick={() => zoomIn()}>+</button>
+                            <button onClick={() => zoomOut()}>-</button>
+                            <button onClick={() => resetTransform()}>x</button>
+                          </div>
+                          <TransformComponent>
+                            <Image maxH={750} src={image} alt="Dan Abramov" />
+                          </TransformComponent>
+                        </React.Fragment>
+                      )}
+                    </TransformWrapper>
                   </center>
                 </Col>
                 <Col xs={1} md={1} xl={1} />
@@ -196,10 +230,10 @@ export default function ImageModal({ isOpen, onClose, image }) {
                     <Box
                       // maxW={'500px'}
                       w={'full'}
-                      bg={useColorModeValue('gray.100', 'red.800')}
-                      boxShadow={'2xl'}
+                      bg={useColorModeValue('white', 'red.800')}
+                      boxShadow={'xl'}
                       // rounded={'lg'}
-                      p={6}
+                      p={3}
                       textAlign={'center'}
                     >
                       <Avatar
@@ -276,21 +310,7 @@ export default function ImageModal({ isOpen, onClose, image }) {
 
                       <Stack>
                         <ImageAntd.PreviewGroup preview={false}>
-                          <Row gutter={12} wrap={true}>
-                            <Col span={4}>
-                              <ImageAntd
-                                width={70}
-                                height={70}
-                                src="https://images.pexels.com/photos/16143861/pexels-photo-16143861.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-                              />
-                            </Col>
-                            <Col span={4}>
-                              {' '}
-                              <ImageAntd
-                                width={70}
-                                src="https://picsum.photos/300/300?image=206"
-                              />
-                            </Col>
+                          <Row justify={'center'} gutter={20} wrap={true}>
                             <Col span={4}>
                               <ImageAntd
                                 width={70}
@@ -323,7 +343,7 @@ export default function ImageModal({ isOpen, onClose, image }) {
                         </ImageAntd.PreviewGroup>
                       </Stack>
 
-                      <Stack mt={8} direction={'row'} spacing={4}>
+                      {/* <Stack mt={8} direction={'row'} spacing={4}>
                         <Button
                           flex={1}
                           fontSize={'sm'}
@@ -352,12 +372,115 @@ export default function ImageModal({ isOpen, onClose, image }) {
                         >
                           Follow
                         </Button>
-                      </Stack>
+                      </Stack> */}
                     </Box>
                   </Center>
+
+                  <Divider></Divider>
+                  {/* <Center> */}
+                  <Box
+                    w={'full'}
+                    bg={useColorModeValue('white', 'red.800')}
+                    boxShadow={'xl'}
+                    p={3}
+                    textAlign={'center'}
+                  >
+                    <Box textAlign={'left'}>
+                      <Collapse
+                        bordered={false}
+                        defaultActiveKey={['1']}
+                        expandIcon={({ isActive }) => (
+                          <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                        )}
+                        style={{ background: 'transparent' }}
+                      >
+                        <Panel
+                          header="Photo Infomation"
+                          key="1"
+                          style={panelStyle}
+                        >
+                          <ListChakra spacing={1}>
+                            <ListItem>
+                              <Row>
+                                <Col span={16}>
+                                  <Text
+                                    fontWeight={600}
+                                    color={'gray.500'}
+                                    fontSize="sm"
+                                  >
+                                    Image Type
+                                  </Text>
+                                </Col>
+                                <Col span={8}>PNG</Col>
+                              </Row>
+                            </ListItem>
+                            <ListItem>
+                              <Row>
+                                <Col span={16}>
+                                  <Text
+                                    fontWeight={600}
+                                    color={'gray.500'}
+                                    fontSize="sm"
+                                  >
+                                    Resolution
+                                  </Text>
+                                </Col>
+                                <Col span={8}>2500x2000</Col>
+                              </Row>
+                            </ListItem>
+                            <ListItem>
+                              <Row>
+                                <Col span={16}>
+                                  <Text
+                                    fontWeight={600}
+                                    color={'gray.500'}
+                                    fontSize="sm"
+                                  >
+                                    Size
+                                  </Text>
+                                </Col>
+                                <Col span={8}>3Mb</Col>
+                              </Row>
+                            </ListItem>
+                            <ListItem>
+                              <Row>
+                                <Col span={16}>
+                                  <Text
+                                    fontWeight={600}
+                                    color={'gray.500'}
+                                    fontSize="sm"
+                                  >
+                                    View
+                                  </Text>
+                                </Col>
+                                <Col span={8}>1000</Col>
+                              </Row>
+                            </ListItem>
+                            <ListItem>
+                              <Row>
+                                <Col span={16}>
+                                  <Text
+                                    fontWeight={600}
+                                    color={'gray.500'}
+                                    fontSize="sm"
+                                  >
+                                    Download
+                                  </Text>
+                                </Col>
+                                <Col span={8}>4</Col>
+                              </Row>
+                            </ListItem>
+                          </ListChakra>
+                        </Panel>
+                      </Collapse>
+                    </Box>
+                  </Box>
                 </Col>
               </Row>
             </Box>
+
+            <Divider>For you</Divider>
+            <ImageGallerySuggestion />
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -33,7 +33,7 @@ export default function Navbar() {
     <Box
       bg={useColorModeValue('white', 'gray.800')}
       top={0}
-      position={'fixed'}
+      // position={'fixed'}
       zIndex={10}
     >
       <Flex
@@ -46,7 +46,7 @@ export default function Navbar() {
         px={{ base: 4 }}
         borderBottom={1}
         borderStyle={'solid'}
-        position={'fixed'}
+        // position={'fixed'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}
       >
@@ -209,6 +209,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 const MobileNav = () => {
   return (
     <Stack
+      // position={'fixed'}
       bg={useColorModeValue('white', 'gray.800')}
       p={4}
       display={{ md: 'none' }}

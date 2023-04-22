@@ -1,9 +1,14 @@
 import { Box, useDisclosure } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import { Image } from 'antd';
-import ImageModal from './ImageModal';
+import { Button } from 'antd';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+
 import { useNavigate } from 'react-router-dom';
+import { PoweroffOutlined } from '@ant-design/icons';
+import ImageModal from './ImageModal';
+import colors from '../../styles/colors';
 const images = [
   'https://images.pexels.com/photos/15011063/pexels-photo-15011063.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
   'https://images.pexels.com/photos/12002706/pexels-photo-12002706.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
@@ -14,16 +19,15 @@ const images = [
   'https://images.pexels.com/photos/12765592/pexels-photo-12765592.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
 
   'https://images.pexels.com/photos/15883885/pexels-photo-15883885.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-  'https://picsum.photos/300/300?image=206',
-  'https://picsum.photos/200/300?image=1050',
-  'https://picsum.photos/300/300?image=206',
-  'https://images.pexels.com/photos/16300645/pexels-photo-16300645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-  'https://cdn.pixabay.com/photo/2015/10/30/20/13/sunrise-1014712_1280.jpg',
+  'https://images.pexels.com/photos/14457850/pexels-photo-14457850.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+  'https://images.pexels.com/photos/3876316/pexels-photo-3876316.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
 ];
 export default function ImageGallery() {
   const navigate = useNavigate();
+  const [loadings, setLoadings] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imageSelected, setImageSelected] = React.useState(null);
+  const [imageData, setImageData] = React.useState(images);
 
   const handleViewDetails = (image) => {
     setImageSelected(image);
@@ -36,29 +40,82 @@ export default function ImageGallery() {
     window.history.replaceState({}, '', '/');
   };
 
+  const enterLoading = (index) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+    }, 6000);
+  };
+  const loadMoreImage = async () => {
+    enterLoading(1);
+    const apiKey = 'D53PZTGQzqmUJ6OMygFsNs7f5NRrDkLd0H7HE1VIlhuYhffT6YPGnTxs'; // Thay YOUR_API_KEY bằng API key của bạn
+    const apiUrl = 'https://api.pexels.com/v1/search?query=cat&per_page=200'; // Thay YOUR_SEARCH_TERM bằng từ khóa tìm kiếm của bạn
+
+    fetch(apiUrl, {
+      headers: {
+        Authorization: apiKey,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const photos = data.photos;
+        // Xử lý dữ liệu danh sách ảnh ở đây
+
+        let newArr = [];
+
+        for (let i = 0; i < photos.length; i++) {
+          const element = photos[i];
+          newArr.push(element.src.large2x);
+        }
+        setImageData([...imageData, ...newArr]);
+      })
+      .catch((error) => console.error(error));
+  };
   return (
-    <Box px={3}>
+    <Box px={3} textAlign={'center'}>
       <ImageModal
         isOpen={isOpen}
         onClose={handleCloseDetails}
         image={imageSelected}
       />
       <ResponsiveMasonry
-        columnsCountBreakPoints={{ 1200: 4, 800: 3, 500: 2, 200: 1 }}
+        columnsCountBreakPoints={{ 1200: 4, 800: 3, 400: 2, 200: 1 }}
       >
         <Masonry columnsCount={4} gutter="15px">
-          {images.map((image, i) => (
-            <Image
+          {imageData.map((image, i) => (
+            <LazyLoadImage
               onClick={() => {
                 handleViewDetails(image);
               }}
               key={i}
               src={image}
-              preview={false}
+              effect="blur"
             />
           ))}
         </Masonry>
       </ResponsiveMasonry>
+
+      <Button
+        style={{
+          backgroundColor: colors.info,
+        }}
+        type="primary"
+        size="large"
+        icon={<PoweroffOutlined />}
+        loading={loadings[1]}
+        onClick={() => loadMoreImage()}
+      >
+        Load more
+      </Button>
     </Box>
   );
 }
