@@ -6,21 +6,21 @@ import {
   Stack,
   Text,
   useColorMode,
-} from "@chakra-ui/react";
-import myVideo from "./demo.mp4";
-import "../index.css";
+} from '@chakra-ui/react';
+import myVideo from './demo.mp4';
+import '../index.css';
 
 export default function CallToActionWithVideo() {
   const { colorMode } = useColorMode();
-  const textColor = colorMode === "light" ? "white" : "white";
+  const textColor = colorMode === 'light' ? 'white' : 'white';
   return (
-    <Container className="box-hero-section" maxW={"10xl"}>
+    <Container className="box-hero-section" maxW={'10xl'}>
       <video
         style={{
-          objectFit: "cover",
-          width: "100%",
-          height: 500,
-          position: "relative",
+          objectFit: 'cover',
+          width: '100%',
+          height: 400,
+          position: 'relative',
         }}
         src={myVideo}
         autoPlay
@@ -28,32 +28,32 @@ export default function CallToActionWithVideo() {
         controls
       />
       <div className="hero-content">
-        <Stack textAlign={"center"}>
+        <Stack textAlign={'center'}>
           <Heading
             fontWeight={600}
-            fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
-            lineHeight={"110%"}
+            fontSize={{ base: '3xl', sm: '4xl', md: '6xl' }}
+            lineHeight={'110%'}
           >
-            <Stack direction={"row"} p={5} style={{paddingTop:100}}>
-              <Text color={"white"}>Meeting scheduling</Text>{" "}
-              <Text as={"span"} color={"orange.400"}>
+            <Stack direction={'row'} p={5} style={{ paddingTop: 100 }}>
+              <Text color={'white'}>Meeting scheduling</Text>{' '}
+              <Text as={'span'} color={'orange.400'}>
                 made easy
               </Text>
             </Stack>
           </Heading>
-          <Text
-            maxW={"3xl"}
+          {/* <Text
+            maxW={'3xl'}
             style={{
               color: textColor,
               padding: 5,
-              background: "rgba(0,0,0,0.9)",
+              background: 'rgba(0,0,0,0.9)',
             }}
           >
             Never miss a meeting. Never be late for one too. Keep track of your
             meetings and receive smart reminders in appropriate times. Read your
             smart “Daily Agenda” every morning.
-          </Text>
-          <Stack p={7}>
+          </Text> */}
+          {/* <Stack p={7}>
             <div>
               <form class="flex items-center">
                 <label for="voice-search" class="sr-only">
@@ -125,7 +125,7 @@ export default function CallToActionWithVideo() {
                 </button>
               </form>
             </div>
-          </Stack>
+          </Stack> */}
         </Stack>
       </div>
     </Container>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Col,
   Row,
@@ -48,11 +48,19 @@ import {
   ListItem,
   ListIcon,
   List as ListChakra,
+  IconButton,
+  Tooltip,
 } from '@chakra-ui/react';
-import { HeartOutlined, CaretRightOutlined } from '@ant-design/icons';
+import {
+  HeartOutlined,
+  CaretRightOutlined,
+  FullscreenOutlined,
+  ExpandOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
 import colors from '../../styles/colors';
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import ImageGallery from './ImageGallery';
+import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons';
 import ImageGallerySuggestion from './ImageGallerySuggestion';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
@@ -60,6 +68,33 @@ const { Panel } = Collapse;
 
 export default function ImageModal({ isOpen, onClose, image }) {
   const [loadings, setLoadings] = useState([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const viewerRef = useRef(null);
+  const handleFullscreenClick = () => {
+    const viewerElement = viewerRef.current;
+    if (viewerElement) {
+      if (!isFullscreen) {
+        if (viewerElement.requestFullscreen) {
+          viewerElement.requestFullscreen();
+          setIsFullscreen(true);
+        } else if (viewerElement.mozRequestFullScreen) {
+          // Cho Firefox
+          viewerElement.mozRequestFullScreen();
+          setIsFullscreen(true);
+        } else if (viewerElement.webkitRequestFullscreen) {
+          // Cho Chrome, Safari và Opera
+          viewerElement.webkitRequestFullscreen();
+        } else if (viewerElement.msRequestFullscreen) {
+          // Cho IE/Edge
+          viewerElement.msRequestFullscreen();
+          setIsFullscreen(true);
+        }
+      } else {
+        document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    }
+  };
 
   const panelStyle = {
     marginBottom: 5,
@@ -192,9 +227,10 @@ export default function ImageModal({ isOpen, onClose, image }) {
                   md={{ span: 14 }}
                   style={{ marginBottom: 5 }}
                 >
-                  <center>
+                  <center ref={viewerRef}>
                     <TransformWrapper
                       initialScale={1}
+                      // zoomInFactor={1.5}
                       // initialPositionX={200}
                       // initialPositionY={100}
                     >
@@ -206,17 +242,76 @@ export default function ImageModal({ isOpen, onClose, image }) {
                               position: 'absolute',
                               zIndex: 1000,
                               right: 0,
-                              width: 100,
-                              backgroundColor: 'rgba(0,0,0,0.8)',
-                              padding: 10,
+                              // width: 100,
+                              backgroundColor: 'rgba(0,0,0,0.3)',
+                              padding: 8,
                             }}
                           >
-                            <button onClick={() => zoomIn()}>+</button>
-                            <button onClick={() => zoomOut()}>-</button>
-                            <button onClick={() => resetTransform()}>x</button>
+                            <Tooltip label="Zoom In" aria-label="Tooltip">
+                              <IconButton
+                                size={'xs'}
+                                rounded={'none'}
+                                background={'none'}
+                                color={colors.white}
+                                _hover={{
+                                  background: 'none',
+                                  color: colors.white,
+                                }}
+                                mr={2}
+                                onClick={() => zoomIn()}
+                                aria-label="Search database"
+                                icon={<ZoomInOutlined color={colors.white} />}
+                              />
+                            </Tooltip>
+                            <Tooltip label="Zoom Out" aria-label="Tooltip">
+                              <IconButton
+                                size={'xs'}
+                                rounded={'none'}
+                                background={'none'}
+                                color={colors.white}
+                                _hover={{
+                                  background: 'none',
+                                  color: colors.white,
+                                }}
+                                mr={2}
+                                onClick={() => zoomOut()}
+                                aria-label="Search database"
+                                icon={<ZoomOutOutlined />}
+                              />
+                            </Tooltip>
+                            <Tooltip label="Original Size" aria-label="Tooltip">
+                              <IconButton
+                                size={'xs'}
+                                rounded={'none'}
+                                background={'none'}
+                                color={colors.white}
+                                _hover={{
+                                  background: 'none',
+                                  color: colors.white,
+                                }}
+                                mr={2}
+                                onClick={() => resetTransform()}
+                                aria-label="Search database"
+                                icon={<ExpandOutlined />}
+                              />
+                            </Tooltip>
+                            <Tooltip label="Full Screen" aria-label="Tooltip">
+                              <IconButton
+                                size={'xs'}
+                                rounded={'none'}
+                                mr={2}
+                                onClick={() => handleFullscreenClick()}
+                                aria-label="Search database"
+                                icon={<FullscreenOutlined />}
+                              />
+                            </Tooltip>
                           </div>
                           <TransformComponent>
-                            <Image maxH={750} src={image} alt="Dan Abramov" />
+                            <Image
+                              maxH={!isFullscreen && 700}
+                              src={image.src.large2x}
+                              alt="Dan Abramov"
+                            />
                           </TransformComponent>
                         </React.Fragment>
                       )}
@@ -225,7 +320,7 @@ export default function ImageModal({ isOpen, onClose, image }) {
                 </Col>
                 <Col xs={1} md={1} xl={1} />
 
-                <Col xs={{ span: 22 }} md={{ span: 8 }} xl={8}>
+                <Col xs={{ span: 22 }} md={{ span: 9 }} xl={9}>
                   <Center>
                     <Box
                       // maxW={'500px'}
@@ -373,108 +468,98 @@ export default function ImageModal({ isOpen, onClose, image }) {
                           Follow
                         </Button>
                       </Stack> */}
+                      <Divider></Divider>
+                      <Box textAlign={'left'}>
+                        <Collapse
+                          bordered={false}
+                          defaultActiveKey={['1']}
+                          expandIcon={({ isActive }) => (
+                            <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                          )}
+                          style={{ background: 'transparent' }}
+                        >
+                          <Panel
+                            header="Photo Infomation"
+                            key="1"
+                            style={panelStyle}
+                          >
+                            <ListChakra spacing={1}>
+                              <ListItem>
+                                <Row>
+                                  <Col span={16}>
+                                    <Text
+                                      fontWeight={600}
+                                      color={'gray.500'}
+                                      fontSize="sm"
+                                    >
+                                      Image Type
+                                    </Text>
+                                  </Col>
+                                  <Col span={8}>PNG</Col>
+                                </Row>
+                              </ListItem>
+                              <ListItem>
+                                <Row>
+                                  <Col span={16}>
+                                    <Text
+                                      fontWeight={600}
+                                      color={'gray.500'}
+                                      fontSize="sm"
+                                    >
+                                      Resolution
+                                    </Text>
+                                  </Col>
+                                  <Col span={8}>2500x2000</Col>
+                                </Row>
+                              </ListItem>
+                              <ListItem>
+                                <Row>
+                                  <Col span={16}>
+                                    <Text
+                                      fontWeight={600}
+                                      color={'gray.500'}
+                                      fontSize="sm"
+                                    >
+                                      Size
+                                    </Text>
+                                  </Col>
+                                  <Col span={8}>3Mb</Col>
+                                </Row>
+                              </ListItem>
+                              <ListItem>
+                                <Row>
+                                  <Col span={16}>
+                                    <Text
+                                      fontWeight={600}
+                                      color={'gray.500'}
+                                      fontSize="sm"
+                                    >
+                                      View
+                                    </Text>
+                                  </Col>
+                                  <Col span={8}>1000</Col>
+                                </Row>
+                              </ListItem>
+                              <ListItem>
+                                <Row>
+                                  <Col span={16}>
+                                    <Text
+                                      fontWeight={600}
+                                      color={'gray.500'}
+                                      fontSize="sm"
+                                    >
+                                      Download
+                                    </Text>
+                                  </Col>
+                                  <Col span={8}>4</Col>
+                                </Row>
+                              </ListItem>
+                            </ListChakra>
+                          </Panel>
+                        </Collapse>
+                      </Box>
                     </Box>
                   </Center>
-
-                  <Divider></Divider>
-                  {/* <Center> */}
-                  <Box
-                    w={'full'}
-                    bg={useColorModeValue('white', 'red.800')}
-                    boxShadow={'xl'}
-                    p={3}
-                    textAlign={'center'}
-                  >
-                    <Box textAlign={'left'}>
-                      <Collapse
-                        bordered={false}
-                        defaultActiveKey={['1']}
-                        expandIcon={({ isActive }) => (
-                          <CaretRightOutlined rotate={isActive ? 90 : 0} />
-                        )}
-                        style={{ background: 'transparent' }}
-                      >
-                        <Panel
-                          header="Photo Infomation"
-                          key="1"
-                          style={panelStyle}
-                        >
-                          <ListChakra spacing={1}>
-                            <ListItem>
-                              <Row>
-                                <Col span={16}>
-                                  <Text
-                                    fontWeight={600}
-                                    color={'gray.500'}
-                                    fontSize="sm"
-                                  >
-                                    Image Type
-                                  </Text>
-                                </Col>
-                                <Col span={8}>PNG</Col>
-                              </Row>
-                            </ListItem>
-                            <ListItem>
-                              <Row>
-                                <Col span={16}>
-                                  <Text
-                                    fontWeight={600}
-                                    color={'gray.500'}
-                                    fontSize="sm"
-                                  >
-                                    Resolution
-                                  </Text>
-                                </Col>
-                                <Col span={8}>2500x2000</Col>
-                              </Row>
-                            </ListItem>
-                            <ListItem>
-                              <Row>
-                                <Col span={16}>
-                                  <Text
-                                    fontWeight={600}
-                                    color={'gray.500'}
-                                    fontSize="sm"
-                                  >
-                                    Size
-                                  </Text>
-                                </Col>
-                                <Col span={8}>3Mb</Col>
-                              </Row>
-                            </ListItem>
-                            <ListItem>
-                              <Row>
-                                <Col span={16}>
-                                  <Text
-                                    fontWeight={600}
-                                    color={'gray.500'}
-                                    fontSize="sm"
-                                  >
-                                    View
-                                  </Text>
-                                </Col>
-                                <Col span={8}>1000</Col>
-                              </Row>
-                            </ListItem>
-                            <ListItem>
-                              <Row>
-                                <Col span={16}>
-                                  <Text
-                                    fontWeight={600}
-                                    color={'gray.500'}
-                                    fontSize="sm"
-                                  >
-                                    Download
-                                  </Text>
-                                </Col>
-                                <Col span={8}>4</Col>
-                              </Row>
-                            </ListItem>
-                          </ListChakra>
-                        </Panel>
-                      </Collapse>
-                    </Box>
-                  </Box>
                 </Col>
               </Row>
             </Box>

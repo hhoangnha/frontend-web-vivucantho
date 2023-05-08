@@ -28,7 +28,7 @@ export default function ImageGallerySuggestion() {
   const handleViewDetails = (image) => {
     setImageSelected(image);
     onOpen();
-    window.history.pushState({}, '', '/detail');
+    window.history.pushState({}, '', '/' + image);
   };
 
   const handleCloseDetails = () => {

@@ -69,3 +69,57 @@ code {
 .ant-modal {
   z-index: 1000 !important;
 }
+
+.scroll-background {
+  background-color: #333;
+}
+.scroll-x{
+  overflow-x: auto;
+}
+.image-box{
+  position: relative;
+}
+.logo-image{
+  position: absolute;
+  z-index: 10;
+  bottom: 10px;
+  border-radius: 3px;
+  right: 2px;
+  background: white;
+  transition: background-color .2s;
+}
+.logo-image img{
+  width: 50px;
+  cursor: pointer;
+}
+.logo-image:hover{
+  background: rgb(196, 196, 196);
+  border-radius: 3px;
+}
+
+.top-image-menu{
+  position: absolute;
+  z-index: 9;
+  padding: 10px;
+  width: 100%;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.image-box:hover .top-image-menu  {
+  opacity: 1;
+}
+.image-box:hover .bottom-image-menu  {
+  opacity: 1;
+}
+
+
+.bottom-image-menu{
+  position: absolute;
+  z-index: 9;
+  padding: 10px;
+  width: 100%;
+  opacity: 0;
+  bottom: 0;
+  height: 50px;
+  transition: opacity .2s;
+}
